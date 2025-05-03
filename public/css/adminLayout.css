@@ -1,0 +1,185 @@
+/* AdminLayout.css */
+.content-wrapper {
+  min-height: 100%;
+  background-color: #f8f9fa;
+}
+
+.content-wrapper .container-fluid {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  background: #fff;
+  border-bottom: 1px solid #e9ecef;
+  padding: 1.25rem;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Page headers */
+.page-header {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+}
+
+.page-header h2 {
+  margin-bottom: 1rem;
+  color: #212529;
+  font-weight: 600;
+}
+
+/* Buttons */
+.btn-primary {
+  background: #00B074;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 5px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: #0b5ed7;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Badges */
+.badge {
+  padding: 0.5em 1em;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .content-wrapper .container-fluid {
+    padding: 1rem;
+  }
+  
+  .card {
+    margin-bottom: 1rem;
+  }
+}
+
+.admin-layout {
+  background-color: #f8f9fa;
+}
+
+.admin-header {
+  z-index: 1030;
+  position: sticky;
+  top: 0;
+}
+
+.navbar {
+  padding: 0;
+}
+
+.navbar-admin-toggle {
+  padding: 0.5rem 1rem;
+  margin-right: 1rem;
+}
+
+.navbar-brand {
+  padding: 0.5rem 1rem;
+}
+
+.navbar-nav .dropdown-menu {
+  position: absolute !important;
+  top: 100% !important;
+  right: 0 !important;
+  left: auto !important;
+  z-index: 1000;
+  margin-top: 0.125rem;
+  padding: 0.5rem 0;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.navbar-nav .dropdown-menu.show {
+  display: block !important;
+}
+
+.navbar-nav .dropdown-item {
+  padding: 0.25rem 1rem;
+  color: #495057;
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.navbar-nav .dropdown-item:hover {
+  color: #000;
+  background-color: #e9ecef;
+}
+
+.navbar-nav .dropdown-item.text-danger:hover {
+  color: #fff;
+  background-color: #dc3545;
+}
+
+.navbar-nav .dropdown-divider {
+  margin: 0.5rem 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.admin-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1020;
+  width: 240px;
+  transition: width 0.3s ease;
+}
+
+.admin-sidebar.collapsed {
+  width: 80px;
+}
+
+.admin-content {
+  margin-left: 240px;
+  transition: margin-left 0.3s ease;
+}
+
+.admin-sidebar.collapsed + .admin-content {
+  margin-left: 80px;
+}
+
+@media (max-width: 991.98px) {
+  .admin-sidebar {
+    position: absolute;
+    z-index: 1000;
+  }
+  
+  .admin-sidebar.collapsed {
+    width: 0;
+  }
+  
+  .admin-sidebar.collapsed + .admin-content {
+    margin-left: 0;
+  }
+}
+/* AdminLayout.css */
