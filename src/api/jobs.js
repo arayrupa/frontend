@@ -9,6 +9,15 @@ export const getJobs = async (params = {}) => {
   }
 };
 
+export const getJobDetail = async (params = {}) => {
+  try {
+    const response = await apiClient.post('/job_details', { params });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getJob = async (id) => {
   try {
     const response = await apiClient.get(`/jobs/${id}`);
@@ -20,7 +29,6 @@ export const getJob = async (id) => {
 
 export const createJob = async (jobData) => {
   try {
-    console.log("jobData:", jobData);
     const response = await apiClient.post('/create-job', jobData);
     return response;
   } catch (error) {

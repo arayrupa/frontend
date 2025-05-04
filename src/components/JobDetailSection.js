@@ -1,6 +1,12 @@
 import React from 'react';
+import parse from 'html-react-parser';
+import moment from 'moment';
 
-const JobDetailSection = () => {
+const JobDetailSection = ({ jobDetail }) => {
+  const capitalizeFirstLetter = (string) => {
+    return string?.charAt(0).toUpperCase() + string?.slice(1).toLowerCase();
+  };
+
   return (
     <div className="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
       <div className="container">
@@ -9,59 +15,40 @@ const JobDetailSection = () => {
             <div className="d-flex align-items-center mb-5">
               <img
                 className="flex-shrink-0 img-fluid border rounded"
-                src="img/com-logo-2.jpg"
+                src={jobDetail?.company_logo}
                 alt=""
                 style={{ width: '80px', height: '80px' }}
               />
               <div className="text-start ps-4">
-                <h3 className="mb-3">Marketing Manager</h3>
+                <h3 className="mb-3">{jobDetail?.title}</h3>
                 <span className="text-truncate me-3">
                   <i className="fa fa-map-marker-alt text-primary me-2"></i>
-                  New York, USA
+                  {jobDetail?.cities?.map(city => city.label).join(', ')}
                 </span>
                 <span className="text-truncate me-3">
                   <i className="far fa-clock text-primary me-2"></i>
-                  Full Time
+                  {capitalizeFirstLetter(jobDetail?.mode_work)}
                 </span>
                 <span className="text-truncate me-0">
                   <i className="far fa-money-bill-alt text-primary me-2"></i>
-                  $123 - $456
+                  {jobDetail?.min_ctc}LPA - {jobDetail?.max_ctc}LPA
                 </span>
               </div>
             </div>
 
             <div className="mb-5">
               <h4 className="mb-3">Job description</h4>
-              <p>
-                Dolor justo tempor duo ipsum accusam rebum gubergren erat...
-              </p>
-
-              <h4 className="mb-3">Responsibility</h4>
-              <p>
-                Magna et elitr diam sed lorem. Diam diam stet erat no est est...
-              </p>
-              <ul className="list-unstyled">
-                <li><i className="fa fa-angle-right text-primary me-2"></i>Dolor justo tempor duo ipsum accusam</li>
-                <li><i className="fa fa-angle-right text-primary me-2"></i>Elitr stet dolor vero clita labore gubergren</li>
-                <li><i className="fa fa-angle-right text-primary me-2"></i>Rebum vero dolores dolores elitr</li>
-                <li><i className="fa fa-angle-right text-primary me-2"></i>Est voluptua et sanctus at sanctus erat</li>
-                <li><i className="fa fa-angle-right text-primary me-2"></i>Diam diam stet erat no est est</li>
-              </ul>
+              <div className="job-description">
+                {jobDetail?.job_desc ? parse(jobDetail.job_desc) : ''}
+              </div>
 
               <h4 className="mb-3">Qualifications</h4>
-              <p>
-                Magna et elitr diam sed lorem. Diam diam stet erat no est est...
-              </p>
-              <ul className="list-unstyled">
-                <li><i className="fa fa-angle-right text-primary me-2"></i>Dolor justo tempor duo ipsum accusam</li>
-                <li><i className="fa fa-angle-right text-primary me-2"></i>Elitr stet dolor vero clita labore gubergren</li>
-                <li><i className="fa fa-angle-right text-primary me-2"></i>Rebum vero dolores dolores elitr</li>
-                <li><i className="fa fa-angle-right text-primary me-2"></i>Est voluptua et sanctus at sanctus erat</li>
-                <li><i className="fa fa-angle-right text-primary me-2"></i>Diam diam stet erat no est est</li>
-              </ul>
+              <div className="job-qualification">
+                {jobDetail?.education}
+              </div>
             </div>
 
-            <div>
+            {/* <div>
               <h4 className="mb-4">Apply For The Job</h4>
               <form>
                 <div className="row g-3">
@@ -85,25 +72,80 @@ const JobDetailSection = () => {
                   </div>
                 </div>
               </form>
-            </div>
+            </div> */}
           </div>
 
           <div className="col-lg-4">
             <div className="bg-light rounded p-5 mb-4 wow slideInUp" data-wow-delay="0.1s">
               <h4 className="mb-4">Job Summary</h4>
-              <p><i className="fa fa-angle-right text-primary me-2"></i>Published On: 01 Jan, 2045</p>
-              <p><i className="fa fa-angle-right text-primary me-2"></i>Vacancy: 123 Position</p>
-              <p><i className="fa fa-angle-right text-primary me-2"></i>Job Nature: Full Time</p>
-              <p><i className="fa fa-angle-right text-primary me-2"></i>Salary: $123 - $456</p>
-              <p><i className="fa fa-angle-right text-primary me-2"></i>Location: New York, USA</p>
-              <p className="m-0"><i className="fa fa-angle-right text-primary me-2"></i>Date Line: 01 Jan, 2045</p>
+              <div className="job-summary-details">
+                <p className="mb-3">
+                  <i className="far fa-calendar-alt text-primary me-2"></i>
+                  <span className="fw-bold">Published On:</span>{' '}
+                  {moment(jobDetail?.createdAt).format('DD MMM, YYYY [at] hh:mm A')}
+                </p>
+                <p className="mb-3">
+                  <i className="fas fa-users text-primary me-2"></i>
+                  <span className="fw-bold">Vacancy:</span>{' '}
+                  {jobDetail?.vacancy} {jobDetail?.vacancy > 1 ? 'Positions' : 'Position'}
+                </p>
+                <p className="mb-3">
+                  <i className="fas fa-clock text-primary me-2"></i>
+                  <span className="fw-bold">Job Nature:</span>{' '}
+                  {capitalizeFirstLetter(jobDetail?.mode_work)}
+                </p>
+                <p className="mb-3">
+                  <i className="fas fa-money-bill-alt text-primary me-2"></i>
+                  <span className="fw-bold">Salary:</span>{' '}
+                  {jobDetail?.min_ctc}LPA - {jobDetail?.max_ctc}LPA
+                </p>
+                <p className="mb-3">
+                  <i className="fas fa-map-marker-alt text-primary me-2"></i>
+                  <span className="fw-bold">Location:</span>{' '}
+                  {jobDetail?.cities?.map(city => city.label).join(', ')}
+                </p>
+                <p className="mb-3">
+                  <i className="fas fa-map-marker-alt text-primary me-2"></i>
+                  <span className="fw-bold">Skill:</span>{' '}
+                  {jobDetail?.skill?.map(skill => skill.label).join(', ')}
+                </p>
+                <p className="mb-0">
+                  <i className="far fa-clock text-primary me-2"></i>
+                  <span className="fw-bold">Deadline:</span>{' '}
+                  {moment(jobDetail?.expired_date).format('DD MMM, YYYY [at] hh:mm A')}
+                </p>
+              </div>
             </div>
 
             <div className="bg-light rounded p-5 wow slideInUp" data-wow-delay="0.1s">
               <h4 className="mb-4">Company Detail</h4>
-              <p className="m-0">
-                Ipsum dolor ipsum accusam stet et et diam dolores, sed rebum...
-              </p>
+              <div className="company-details">
+                {jobDetail?.company_name && (
+                  <p className="mb-3">
+                    <i className="fa fa-building text-primary me-2"></i>
+                    {jobDetail.company_name}
+                  </p>
+                )}
+                {jobDetail?.company_address && (
+                  <p className="mb-3">
+                    <i className="fa fa-map-marker-alt text-primary me-2"></i>
+                    {jobDetail.company_address}
+                  </p>
+                )}
+                {jobDetail?.company_website && (
+                  <p className="mb-0">
+                    <i className="fa fa-globe text-primary me-2"></i>
+                    <a 
+                      href={jobDetail.company_website.startsWith('http') ? jobDetail.company_website : `https://${jobDetail.company_website}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary"
+                    >
+                      {jobDetail.company_website}
+                    </a>
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>
