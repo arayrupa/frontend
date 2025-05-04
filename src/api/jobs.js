@@ -62,3 +62,12 @@ export const masterFilters = async (query) => {
     throw error;
   }
 };
+
+export const getJobCategoryFilters = async () => {
+  try {
+    const response = await apiClient.get('/category_filters');
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
