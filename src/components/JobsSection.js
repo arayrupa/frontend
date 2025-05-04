@@ -23,14 +23,13 @@ const JobsSection = () => {
         limit: jobsPerPage,
       });
       setJobs(response?.data?.jobList?.jobList || []);
-      setTotalPages(response?.data?.jobList?.pagination?.totalPages);
+      setTotalPages(response?.data?.pagination?.totalPages);
     } catch (error) {
       console.error('Failed to fetch jobs:', error);
     } finally {
       setLoading(false);
     }
   };
-  console.log("jobs:", jobs);
   useEffect(() => {
     fetchJobs(page, modeWork);
   }, [page, modeWork]);
@@ -38,7 +37,6 @@ const JobsSection = () => {
   const handlePageChange = (event, value) => {
     setPage(value);
   };
-
   const handleTabChange = (mode) => { 
     setModeWork(mode);
     setPage(1);

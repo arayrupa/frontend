@@ -6,23 +6,42 @@ import { Link } from 'react-router-dom';
 const JobsSection = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('tab-1');
+  const [activeTab, setActiveTab] = useState('tab-all');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [modeWork, setModeWork] = useState('');
+  const jobsPerPage = 10;
   
-  const fetchJobs = async () => {
+  const fetchJobs = async (pageNumber = 1, modeWork) => {
     try {
       setLoading(true);
-      const response = await getJobs();
-      setJobs(response?.data?.jobList?.jobList);
+      const response = await getJobs({ 
+        page: pageNumber, 
+        mode_work: modeWork,
+        limit: jobsPerPage,
+      });
+      setJobs(response?.data?.jobList?.jobList || []);
+      setTotalPages(response?.data?.jobList?.pagination?.totalPages);
     } catch (error) {
       console.error('Failed to fetch jobs:', error);
     } finally {
       setLoading(false);
     }
   };
-  
   useEffect(() => {
-    fetchJobs();
-  }, []);
+    fetchJobs(page, modeWork);
+  }, [page, modeWork]);
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
+
+  const handleTabChange = (mode) => { 
+    setModeWork(mode);
+    setPage(1);
+    fetchJobs(1, mode);
+    setActiveTab(`tab-${mode===""?"all":mode}`);
+  };
 
   return (
     <div className="container-xxl py-5">
@@ -31,48 +50,63 @@ const JobsSection = () => {
         <div className="tab-class text-center wow fadeInUp" data-wow-delay="0.3s">
           <ul className="nav nav-pills d-inline-flex justify-content-center border-bottom mb-5">
             <li className="nav-item">
-              <a 
-                className={`d-flex align-items-center text-start mx-3 ms-0 pb-3 ${activeTab === 'tab-1' ? 'active' : ''}`} 
-                onClick={() => setActiveTab('tab-1')}
+              <a
+                className={`d-flex align-items-center text-start mx-3 ms-0 pb-3 ${activeTab === 'tab-all' ? 'active' : ''}`}
+                onClick={() => handleTabChange('')}
                 href="#"
               >
-                <h6 className="mt-n1 mb-0">Featured</h6>
+                <h6 className="mt-n1 mb-0">All</h6>
               </a>
             </li>
             <li className="nav-item">
-              <a 
-                className={`d-flex align-items-center text-start mx-3 pb-3 ${activeTab === 'tab-2' ? 'active' : ''}`} 
-                onClick={() => setActiveTab('tab-2')}
+              <a
+                className={`d-flex align-items-center text-start mx-3 ms-0 pb-3 ${activeTab === 'tab-onsite' ? 'active' : ''}`}
+                onClick={() => handleTabChange('onsite')}
                 href="#"
               >
-                <h6 className="mt-n1 mb-0">Full Time</h6>
+                <h6 className="mt-n1 mb-0">Onsite</h6>
               </a>
             </li>
             <li className="nav-item">
-              <a 
-                className={`d-flex align-items-center text-start mx-3 me-0 pb-3 ${activeTab === 'tab-3' ? 'active' : ''}`} 
-                onClick={() => setActiveTab('tab-3')}
+              <a
+                className={`d-flex align-items-center text-start mx-3 pb-3 ${activeTab === 'tab-hybrid' ? 'active' : ''}`}
+                onClick={() => handleTabChange('hybrid')}
                 href="#"
               >
-                <h6 className="mt-n1 mb-0">Part Time</h6>
+                <h6 className="mt-n1 mb-0">Hybrid</h6>
+              </a>
+            </li>
+            <li className="nav-item">
+              <a
+                className={`d-flex align-items-center text-start mx-3 pb-3 ${activeTab === 'tab-wfh' ? 'active' : ''}`}
+                onClick={() => handleTabChange('wfh')}
+                href="#"
+              >
+                <h6 className="mt-n1 mb-0">Work From Home</h6>
               </a>
             </li>
           </ul>
           <div className="tab-content">
-            <div id="tab-1" className={`tab-pane fade show p-0 ${activeTab === 'tab-1' ? 'active' : ''}`}>
-              {jobs.map((job, index) => (
+            <div id="tab-all" className={`tab-pane fade show p-0 ${activeTab === 'tab-all' ? 'active' : ''}`}>
+              {jobs?.map((job, index) => (
                 <JobItem key={index} job={job} />
               ))}
               <Link className="btn btn-primary py-3 px-5" to="/job-list">Browse More Jobs</Link>
             </div>
-            <div id="tab-2" className={`tab-pane fade show p-0 ${activeTab === 'tab-2' ? 'active' : ''}`}>
-              {jobs.map((job, index) => (
+            <div id="tab-onsite" className={`tab-pane fade show p-0 ${activeTab === 'tab-onsite' ? 'active' : ''}`}>
+              {jobs?.map((job, index) => (
+                <JobItem key={index} job={job} />
+              ))}
+             <Link className="btn btn-primary py-3 px-5" to="/job-list">Browse More Jobs</Link>
+            </div>
+            <div id="tab-hybrid" className={`tab-pane fade show p-0 ${activeTab === 'tab-hybrid' ? 'active' : ''}`}>
+              {jobs?.map((job, index) => (
                 <JobItem key={index} job={job} />
               ))}
               <Link className="btn btn-primary py-3 px-5" to="/job-list">Browse More Jobs</Link>
             </div>
-            <div id="tab-3" className={`tab-pane fade show p-0 ${activeTab === 'tab-3' ? 'active' : ''}`}>
-              {jobs.map((job, index) => (
+            <div id="tab-wfh" className={`tab-pane fade show p-0 ${activeTab === 'tab-wfh' ? 'active' : ''}`}>
+              {jobs?.map((job, index) => (
                 <JobItem key={index} job={job} />
               ))}
               <Link className="btn btn-primary py-3 px-5" to="/job-list">Browse More Jobs</Link>
@@ -85,3 +119,5 @@ const JobsSection = () => {
 };
 
 export default JobsSection;
+
+
