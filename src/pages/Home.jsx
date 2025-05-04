@@ -4,7 +4,7 @@ import Spinner from '../components/Spinner';
 import Carousel from '../components/Carousel';
 import SearchBar from '../components/SearchBar';
 import CategorySection from '../components/CategorySection';
-import JobsSection from '../components/JobsSection';
+import JobsSection from '../components/JobsSectionHome';
 import TestimonialSection from '../components/TestimonialSection';
 import Footer from '../components/Footer';
 import BackToTop from '../components/BackToTop';

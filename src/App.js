@@ -1,6 +1,5 @@
-
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import JobList from "./pages/JobList";
@@ -14,6 +13,12 @@ import AdminDashboard from './pages/AdminDashboard';
 import AdminJobs from './pages/AdminJobs';
 import AddJobs from './pages/AddJobs';
 
+// PrivateRoute component to protect admin routes
+const PrivateRoute = ({ element }) => {
+  const isAuthenticated = localStorage.getItem("token"); // Assuming you store auth token in localStorage
+  return isAuthenticated ? element : <Navigate to="/login" replace />;
+};
+
 function App() {
   return (
     <Router>
@@ -21,16 +26,17 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/job-list" element={<JobList />} />
-        <Route path="/job-detail" element={<JobDetail />} />
+        <Route path="/job-detail/:id" element={<JobDetail />} />
         <Route path="/category" element={<Category />} />
         <Route path="/testimonial" element={<Testimonial />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/404" element={<Error404 />} />
         <Route path="/login" element={<Login />} />
         
-        <Route path="/dashboard" element={<AdminDashboard />}/>
-        <Route path="/jobs" element={<AdminJobs />} />
-        <Route path="/jobs-add" element={<AddJobs />} />
+        {/* Protected Admin Routes */}
+        <Route path="/dashboard" element={<PrivateRoute element={<AdminDashboard />} />} />
+        <Route path="/jobs" element={<PrivateRoute element={<AdminJobs />} />} />
+        <Route path="/jobs-add" element={<PrivateRoute element={<AddJobs />} />} />
         
       </Routes>
     </Router>

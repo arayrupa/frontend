@@ -18,7 +18,7 @@ const JobsList = () => {
   const [modeWork, setModeWork] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
+ 
   const columns = [
     { field: '_id', headerName: 'ID', width: 90 },
     { 
@@ -43,7 +43,7 @@ const JobsList = () => {
         </Typography>
       )
     },
-    { 
+    {
       field: 'cities', 
       headerName: 'Location', 
       width: 180,
@@ -54,7 +54,7 @@ const JobsList = () => {
         </Typography>
       )
     },
-    { 
+    {
       field: 'min_ctc', 
       headerName: 'Min CTC', 
       width: 150,
