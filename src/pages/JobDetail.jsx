@@ -30,7 +30,7 @@ const JobDetail = () => {
     if (location.state?.id) {
       fetchJobDetail();
     }
-  }, [location.state?.id]);
+  }, [location.state?.id]); 
 
   return (
     <div className="container-xxl bg-white p-0">

@@ -1,16 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { CopyAll as CopyIcon } from '@mui/icons-material';
 
 const JobItem = ({ job }) => {
   const navigate = useNavigate();
+  const [copied, setCopied] = useState(false);
 
   const handleJobClick = () => {
     navigate('/job-detail', { state: { id: job._id } });
   };
+
+  const getPublicUrl = (jobId) => {
+    // Generate public URL using job ID
+    return `${window.location.origin}/public-job/${jobId}`;
+  };
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(getPublicUrl(job._id));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
+
   const capitalizeFirstLetter = (string) => {
     return string?.charAt(0)?.toUpperCase() + string?.slice(1).toLowerCase();
   };
-
 
   return (
     <div className="job-item p-4 mb-4">
@@ -24,12 +41,22 @@ const JobItem = ({ job }) => {
             <span className="text-truncate me-0"><i className="far fa-money-bill-alt text-primary me-2"></i>{job.min_ctc}LPA - {job.max_ctc}LPA</span>
           </div>
         </div>
-        <div className="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
-          <div className="d-flex mb-3">
-            <a className="btn btn-light btn-square me-3" ><i className="far fa-heart text-primary"></i></a>
-            <a className="btn btn-primary" onClick={handleJobClick}>Apply Now</a>
+        <div className="col-sm-12 col-md-4 d-flex align-items-center justify-content-end">
+          <div className="d-flex align-items-center gap-3">
+            <button 
+              onClick={handleJobClick} 
+              className="btn btn-primary"
+            >
+              View Details
+            </button>
+            <button 
+              onClick={handleCopy}
+              className="btn btn-outline-primary"
+              title={copied ? 'Copied!' : 'Copy Public URL'}
+            >
+              <CopyIcon /> {copied ? 'Copied!' : 'Copy URL'}
+            </button>
           </div>
-          <small className="text-truncate"><i className="far fa-calendar-alt text-primary me-2"></i>Date Line: {job.expired_date}</small>
         </div>
       </div>
     </div>

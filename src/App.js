@@ -12,6 +12,7 @@ import Login from './components/Login';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminJobs from './pages/AdminJobs';
 import AddJobs from './pages/AddJobs';
+import PublicJobDetail from './pages/PublicJobDetail';
 
 // PrivateRoute component to protect admin routes
 const PrivateRoute = ({ element }) => {
@@ -38,6 +39,7 @@ function App() {
         <Route path="/jobs" element={<PrivateRoute element={<AdminJobs />} />} />
         <Route path="/jobs-add" element={<PrivateRoute element={<AddJobs />} />} />
         <Route path="/admin/jobs/edit" element={<PrivateRoute element={<AddJobs />} />} />
+        <Route path="/public-job/:id" element={<PublicJobDetail />} />
       </Routes>
     </Router>
   );
