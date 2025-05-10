@@ -37,7 +37,7 @@ function App() {
         <Route path="/dashboard" element={<PrivateRoute element={<AdminDashboard />} />} />
         <Route path="/jobs" element={<PrivateRoute element={<AdminJobs />} />} />
         <Route path="/jobs-add" element={<PrivateRoute element={<AddJobs />} />} />
-        
+        <Route path="/admin/jobs/edit" element={<PrivateRoute element={<AddJobs />} />} />
       </Routes>
     </Router>
   );

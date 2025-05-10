@@ -38,16 +38,25 @@ export const createJob = async (jobData) => {
 
 export const updateJob = async (id, jobData) => {
   try {
-    const response = await apiClient.put(`/jobs/${id}`, jobData);
+    const response = await apiClient.put(`/update-job/${id}`, jobData);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const deleteJob = async (id) => {
+  try {
+    const response = await apiClient.delete(`/jobs/${id}`);
     return response;
   } catch (error) {
     throw error;
   }
 };
 
-export const deleteJob = async (id) => {
+export const activeInactiveJob = async (id, status) => {
   try {
-    const response = await apiClient.delete(`/jobs/${id}`);
+    const response = await apiClient.post(`/active-inactive-job/${id}`, { status });
     return response;
   } catch (error) {
     throw error;

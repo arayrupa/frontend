@@ -8,7 +8,7 @@ const JobItem = ({ job }) => {
     navigate('/job-detail', { state: { id: job._id } });
   };
   const capitalizeFirstLetter = (string) => {
-    return string?.charAt(0).toUpperCase() + string?.slice(1).toLowerCase();
+    return string?.charAt(0)?.toUpperCase() + string?.slice(1).toLowerCase();
   };
 
 
@@ -20,7 +20,7 @@ const JobItem = ({ job }) => {
           <div className="text-start ps-4">
             <h5 className="mb-3">{job.job_role?.label}</h5>
             <span className="text-truncate me-3"><i className="fa fa-map-marker-alt text-primary me-2"></i>{job.cities.map(city => city.label).join(', ')}</span>
-            <span className="text-truncate me-3"><i className="far fa-clock text-primary me-2"></i>{capitalizeFirstLetter(job?.mode_work)}</span>
+            <span className="text-truncate me-3"><i className="far fa-clock text-primary me-2"></i>{capitalizeFirstLetter(job?.mode_work?.label)}</span>
             <span className="text-truncate me-0"><i className="far fa-money-bill-alt text-primary me-2"></i>{job.min_ctc}LPA - {job.max_ctc}LPA</span>
           </div>
         </div>

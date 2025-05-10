@@ -147,6 +147,24 @@ const JobDetailSection = ({ jobDetail }) => {
                 )}
               </div>
             </div>
+            {jobDetail?.applied_url && (
+              <div className="bg-light rounded p-5 mb-4 wow slideInUp" data-wow-delay="0.1s">
+                <h4 className="mb-4">Apply Here</h4>
+                <div className="text-start ps-4">
+                  <p className="text-truncate mb-0">
+                    <i className="fa fa-link text-primary me-2"></i>
+                    <a 
+                      href={jobDetail.applied_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary"
+                    >
+                      {jobDetail.applied_url}
+                    </a>
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

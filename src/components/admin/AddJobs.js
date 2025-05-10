@@ -6,7 +6,7 @@ import {
   Button,
   CircularProgress,
   Grid,
-  Container,
+  Container, 
   Alert,
   IconButton,
   FormControl,
@@ -23,7 +23,7 @@ import {
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { createJob } from '../../api';
+import { createJob, updateJob } from '../../api';
 import CloseIcon from '@mui/icons-material/Close';
 
 
@@ -102,27 +102,32 @@ const FormSection = styled(Box)(({ theme }) => ({
 }));
 
 const AddJobs = () => {
-  const [formData, setFormData] = useState({
-    company: '',
-    job_role: '',
-    edu_id: '',
-    vacancy: '',
-    min_exp: '',
-    max_exp: '',
-    min_ctc: '',
-    max_ctc: '',
-    age: '',
-    notice_period: '',
-    industry_id: '',
-    mode_work: '',
-    func_category_id: '',
-    city_id: '',
-    skill: '',
-    job_desc: ''
-  });
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isEditMode = Boolean(location.state?.jobData);
+  
+  const [formData, setFormData] = useState(
+    location.state?.jobData || {
+      company: '',
+      job_role: '',
+      edu_id: '',
+      vacancy: '',
+      min_exp: '',
+      max_exp: '',
+      min_ctc: '',
+      max_ctc: '',
+      age: '',
+      notice_period: '',
+      industry_id: '',
+      mode_work: '',
+      func_category_id: '',
+      cities: '',
+      skill: '',
+      job_desc: ''
+    }
+  );
 
   // Get dropdown data from location state
-  const location = useLocation();
   const [companies, setCompanies] = useState(location.state?.companies || []);
   const [jobRoles, setJobRoles] = useState(location.state?.jobRoles || []);
   const [educations, setEducations] = useState(location.state?.educations || []);
@@ -133,24 +138,52 @@ const AddJobs = () => {
   const [modeWork, setModeWork] = useState(location.state?.modeWork || []);
   const [files, setFiles] = useState({
     resume: null,
-    // audio_1: null,
-    // audio_2: null,
   });
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.state?.jobData) {
+      // Transform the job data to match form structure
+      const jobData = location.state.jobData;
+      setFormData({
+        ...jobData,
+        company: jobData.company || '',
+        job_role: jobData.job_role || '',
+        education: jobData.education || '',
+        vacancy: jobData.vacancy || '',
+        min_exp: jobData.min_exp || '',
+        max_exp: jobData.max_exp || '',
+        min_ctc: jobData.min_ctc || '',
+        max_ctc: jobData.max_ctc || '',
+        age: jobData.age || '',
+        notice_period: jobData.notice_period || '',
+        industry_id: jobData.industry_id || '',
+        mode_work: jobData.mode_work || '',
+        func_category_id: jobData.func_category_id || '',
+        cities: {value: jobData.cities[0]?.value, label: jobData.cities[0]?.label} || '',
+        skill: {value: jobData.skill[0]?.value, label: jobData.skill[0]?.label} || '',
+        job_desc: jobData.job_desc || ''
+      });
+    }
+  }, [location.state]);
 
   // If no data in location state, fetch from API
   useEffect(() => {
-    setCompanies(location.state?.companies || []);
-    setJobRoles(location.state?.jobRoles || []);
-    setEducations(location.state?.educations || []);
-    setIndustries(location.state?.industries || []);
-    setFuncCategories(location.state?.funcCategories || []);
-    setCities(location.state?.cities || []);
-    setSkills(location.state?.skills || []);
-    setModeWork(location.state?.modeWork || []);
+    if (!location.state) {
+      // fetchDropdownData();
+    } else {
+      // Use the data from location state
+      setCompanies(location.state.companies || []);
+      setJobRoles(location.state.jobRoles || []);
+      setEducations(location.state.educations || []);
+      setIndustries(location.state.industries || []);
+      setFuncCategories(location.state.funcCategories || []);
+      setCities(location.state.cities || []);
+      setSkills(location.state.skills || []);
+      setModeWork(location.state.modeWork || []);
+    }
   }, [location.state]);
 
   if (loading) {
@@ -165,7 +198,7 @@ const AddJobs = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const selectedValue = typeof value === 'object' ? value.value : value;
+    const selectedValue = typeof value === 'object' ? value : value;
     setFormData(prev => ({
       ...prev,
       [name]: selectedValue
@@ -185,89 +218,68 @@ const AddJobs = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
-  
-    // Validate job description
-    if (!formData.job_desc || formData.job_desc.trim() === '') {
-      setError('Job description is required');
+
+    // Enhanced job description validation
+    const jobDesc = formData.job_desc || '';
+    const plainText = jobDesc.replace(/<[^>]*>/g, '').trim(); // Remove HTML tags and trim
+
+    if (!plainText) {
+      setError('Job description is required and cannot be empty');
       setLoading(false);
       return;
     }
-  
+
+    if (plainText.length < 50) {
+      setError('Job description must be at least 50 characters long');
+      setLoading(false);
+      return;
+    }
+
     try {
       // Create FormData
-      const formDataVlaue = new FormData();
+      const formDataValue = new FormData();
       
       // Add form data fields
       Object.entries(formData).forEach(([key, value]) => {
-        if (value) {
-          if (typeof value === 'object') {
-            formDataVlaue.append(key, value.value);
+        if (value !== undefined && value !== null) {
+          if (typeof value === 'object' && value !== null) {
+            formDataValue.append(key, value.value || value);
           } else {
-            formDataVlaue.append(key, value);
+            formDataValue.append(key, value);
           }
         }
       });
-  
-      // Add files
-        if (files) {
-          console.log("inside")
-          formDataVlaue.append('resume', files?.resume);
+
+      if (isEditMode) {
+        if(formDataValue.get('expired_date')) {
+          formDataValue.delete('expired_date')
         }
-      console.log("Files before sending:", files?.resume);
-      console.log("formDataVlaue:", formDataVlaue);
-  
-      await createJob(formDataVlaue);
+        if(formDataValue.get('createdAt')) {
+          formDataValue.delete('createdAt')
+        }
+        if(formDataValue.get('updatedAt')) {
+          formDataValue.delete('updatedAt')
+        }
+        if(formDataValue.get('status')) {
+          formDataValue.delete('status')
+        }
+        await updateJob(location.state.jobData._id, formDataValue);
+      } else {
+        // Add files only for new job creation
+        // if (files) {
+        //   formDataValue.append('resume', files?.resume);
+        // }
+        await createJob(formDataValue);
+      }
+
       navigate('/jobs');
     } catch (error) {
-      console.error('Create Job Error:', error);
-      setError(error.message || 'Failed to create job');
+      console.error('Job Operation Error:', error);
+      setError(error.message || 'Failed to save job');
     } finally {
       setLoading(false);
     }
   };
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-  //   setError('');
-  //   // Validate job description
-  //   if (!formData.job_desc || formData.job_desc.trim() === '') {
-  //     setError('Job description is required');
-  //     setLoading(false);
-  //     return;
-  //   }
-  //   try {
-  //     // Create a new object to store the data
-  //     const payload = {};
-  //     // First handle the form data
-  //     Object.entries(formData).forEach(([key, value]) => {
-  //       if (value) {
-  //         if (typeof value === 'object') {
-  //           // For Select components, use the value property
-  //           payload[key] = value.value;
-  //         } else {
-  //           payload[key] = value;
-  //         }
-  //       }
-  //     });
-  
-  //     // Then handle the files
-  //     console.log("files",files)
-  //     Object.entries(files).forEach(([key, value]) => {
-  //       if (value) {
-  //         payload[key] = value;
-  //       }
-  //     });
-  //     console.log("payload",payload)
-  //     // Send the data
-  //     await createJob(payload);
-  //     navigate('/jobs');
-  //   } catch (error) {
-  //     console.error('Create Job Error:', error);
-  //     setError(error.message || 'Failed to create job');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   return (
     <ThemeProvider theme={theme}>
@@ -275,7 +287,7 @@ const AddJobs = () => {
         <StyledPaper>
           <Box sx={{ px: 4, pt: 4 }}>
             <Typography variant="h5" component="h1" gutterBottom sx={{ mb: 2 }}>
-              Add New Job Opening
+              {isEditMode ? 'Edit Job' : 'Add New Job'}
             </Typography>
             {error && (
               <Alert severity="error" sx={{ mb: 2 }}>
@@ -292,7 +304,7 @@ const AddJobs = () => {
             )}
           </Box>
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+          <form onSubmit={handleSubmit} encType="multipart/form-data" style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
             <ScrollWrapper>
               {/* Basic Information Section */}
               <FormSection>
@@ -304,8 +316,8 @@ const AddJobs = () => {
                     <FormControl fullWidth>
                       <InputLabel>Company</InputLabel>
                       <Select
-                        name="companies"
-                        value={companies.find(r => r.value === formData.company)}
+                        name="company"
+                        value={companies.find(r => r.value === formData.company?.value)}
                         onChange={handleChange}
                         label="Company"
                         required
@@ -323,7 +335,7 @@ const AddJobs = () => {
                       <InputLabel>Job Role</InputLabel>
                       <Select
                         name="job_role"
-                        value={jobRoles.find(r => r.value === formData.job_role)}
+                        value={jobRoles.find(r => r.value === formData.job_role?.value)}
                         onChange={handleChange}
                         label="Job Role"
                         required
@@ -341,7 +353,7 @@ const AddJobs = () => {
                       <InputLabel>Work Mode</InputLabel>
                       <Select
                         name="mode_work"
-                        value={modeWork.find(r => r.value === formData.mode_work)}
+                        value={modeWork.find(r => r.value === formData.mode_work?.value)}
                         onChange={handleChange}
                         label="Work Mode"
                         required
@@ -375,12 +387,20 @@ const AddJobs = () => {
                     >
                       <CKEditor
                         editor={ClassicEditor}
-                        data="<p></p>"
-                        onReady={(editor) => {
+                        data={formData.job_desc || '<p></p>'}
+                        onReady={editor => {
+                          console.log('Editor is ready');
                         }}
                         onChange={(event, editor) => {
-                          const data = editor.getData()
-                          setFormData({ ...formData, job_desc: data })
+                          const data = editor.getData();
+                          setFormData(prev => ({
+                            ...prev,
+                            job_desc: data
+                          }));
+                        }}
+                        onError={(error, { willPrevent }) => {
+                          console.error('CKEditor error:', error);
+                          willPrevent();
                         }}
                       />
                     </Box>
@@ -629,7 +649,7 @@ const AddJobs = () => {
                       <InputLabel>Education</InputLabel>
                       <Select
                         name="edu_id"
-                        value={educations.find(e => e.value === formData.edu_id)}
+                        value={educations.find(e => e.value === formData.education?.value)}
                         onChange={handleChange}
                         label="Education"
                         required
@@ -647,7 +667,7 @@ const AddJobs = () => {
                       <InputLabel>Industry</InputLabel>
                       <Select
                         name="industry_id"
-                        value={industries.find(i => i.value === formData.industry_id)}
+                        value={industries.find(i => i.value === formData.industry_id?.value)}
                         onChange={handleChange}
                         label="Industry"
                         required
@@ -674,7 +694,7 @@ const AddJobs = () => {
                       <InputLabel>Function Category</InputLabel>
                       <Select
                         name="func_category_id"
-                        value={funcCategories.find(fc => fc.value === formData.func_category_id)}
+                        value={funcCategories.find(fc => fc.value === formData.func_category_id?.value)}
                         onChange={handleChange}
                         label="Function Category"
                         required
@@ -691,8 +711,8 @@ const AddJobs = () => {
                     <FormControl fullWidth>
                       <InputLabel>City</InputLabel>
                       <Select
-                        name="city_id"
-                        value={cities.find(c => c.value === formData.city_id)}
+                        name="cities"
+                        value={cities?.find(c => c.value === formData.cities?.value)}
                         onChange={handleChange}
                         label="City"
                         required
@@ -710,7 +730,7 @@ const AddJobs = () => {
                       <InputLabel>Skills</InputLabel>
                       <Select
                         name="skill"
-                        value={skills.find(s => s.value === formData.skill)}
+                        value={skills?.find(s => s.value === formData.skill?.value)}
                         onChange={handleChange}
                         label="Skills"
                         required
@@ -729,9 +749,17 @@ const AddJobs = () => {
               {/* File Uploads */}
               <FormSection>
                 <Typography variant="h6" gutterBottom sx={{ mb: 2, color: 'primary.main' }}>
-                  Required Documents
+                Applied URL
                 </Typography>
-                <Grid container spacing={3}>
+                <TextField
+                  fullWidth
+                  name="applied_url"
+                  value={formData.applied_url}
+                  onChange={handleChange}
+                  label="Applied URL"
+                  required
+                />
+                {/* <Grid container spacing={3}>
                   <Grid item xs={12} sm={4}>
                     <input
                       accept="application/pdf"
@@ -752,47 +780,7 @@ const AddJobs = () => {
                       </Button>
                     </label>
                   </Grid>
-                  {/* <Grid item xs={12} sm={4}>
-                      <input
-                        accept="audio/*"
-                        style={{ display: 'none' }}
-                        id="audio1-upload"
-                        type="file"
-                        name="audio_1"
-                        onChange={handleFileChange}
-                      />
-                      <label htmlFor="audio1-upload">
-                        <Button
-                          fullWidth
-                          variant={files.audio_1 ? 'contained' : 'outlined'}
-                          component="span"
-                          size="small"
-                        >
-                          {files.audio_1 ? 'Audio 1 Selected' : 'Upload Audio 1'}
-                        </Button>
-                      </label>
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <input
-                        accept="audio/*"
-                        style={{ display: 'none' }}
-                        id="audio2-upload"
-                        type="file"
-                        name="audio_2"
-                        onChange={handleFileChange}
-                      />
-                      <label htmlFor="audio2-upload">
-                        <Button
-                          fullWidth
-                          variant={files.audio_2 ? 'contained' : 'outlined'}
-                          component="span"
-                          size="small"
-                        >
-                          {files.audio_2 ? 'Audio 2 Selected' : 'Upload Audio 2'}
-                        </Button>
-                      </label>
-                    </Grid> */}
-                </Grid>
+                </Grid> */}
               </FormSection>
             </ScrollWrapper>
 
@@ -811,7 +799,7 @@ const AddJobs = () => {
                   fontSize: '1rem',
                 }}
               >
-                {loading ? <CircularProgress size={24} /> : 'Create Job Opening'}
+                {loading ? <CircularProgress size={24} /> : isEditMode ? 'Update Job' : 'Create Job Opening'}
               </Button>
             </Box>
           </form>
