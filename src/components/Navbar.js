@@ -14,11 +14,7 @@ const Navbar = () => {
           <Link to="/" className="nav-item nav-link active">Home</Link>
           <Link to="/about" className="nav-item nav-link">About</Link>
           <div className="nav-item dropdown">
-            <a href="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown">Jobs</a>
-            <div className="dropdown-menu rounded-0 m-0">
-              <Link to="/job-list" className="dropdown-item">Job List</Link>
-              <Link to="/job-detail" className="dropdown-item">Job Detail</Link>
-            </div>
+            <a href="/job-list" className="nav-link ">Jobs</a>
           </div>
           <div className="nav-item dropdown">
             <a href="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>

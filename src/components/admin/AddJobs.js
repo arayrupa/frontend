@@ -263,6 +263,9 @@ const AddJobs = () => {
         if(formDataValue.get('status')) {
           formDataValue.delete('status')
         }
+        if(formDataValue.get('member_id')) {
+          formDataValue.delete('member_id')
+        }
         await updateJob(location.state.jobData._id, formDataValue);
       } else {
         // Add files only for new job creation

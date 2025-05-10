@@ -54,7 +54,7 @@ const JobsSection = () => {
               <a
                 className={`d-flex align-items-center text-start mx-3 ms-0 pb-3 ${activeTab === 'tab-all' ? 'active' : ''}`}
                 onClick={() => handleTabChange('')}
-                href="#"
+                // href=""
               >
                 <h6 className="mt-n1 mb-0">All</h6>
               </a>
@@ -63,7 +63,7 @@ const JobsSection = () => {
               <a
                 className={`d-flex align-items-center text-start mx-3 ms-0 pb-3 ${activeTab === 'tab-onsite' ? 'active' : ''}`}
                 onClick={() => handleTabChange('onsite')}
-                href="#"
+                // href="#"
               >
                 <h6 className="mt-n1 mb-0">Onsite</h6>
               </a>
@@ -72,7 +72,7 @@ const JobsSection = () => {
               <a
                 className={`d-flex align-items-center text-start mx-3 pb-3 ${activeTab === 'tab-hybrid' ? 'active' : ''}`}
                 onClick={() => handleTabChange('hybrid')}
-                href="#"
+                // href="#"
               >
                 <h6 className="mt-n1 mb-0">Hybrid</h6>
               </a>
@@ -81,7 +81,7 @@ const JobsSection = () => {
               <a
                 className={`d-flex align-items-center text-start mx-3 pb-3 ${activeTab === 'tab-wfh' ? 'active' : ''}`}
                 onClick={() => handleTabChange('wfh')}
-                href="#"
+                // href="#"
               >
                 <h6 className="mt-n1 mb-0">Work From Home</h6>
               </a>
