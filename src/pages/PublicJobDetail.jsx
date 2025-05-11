@@ -3,13 +3,17 @@ import { useParams } from 'react-router-dom';
 import JobDetailSection from '../components/JobDetailSection';
 import { getJobDetail } from '../api/jobs';
 import { decryptId } from '../utils/encryption';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import Spinner from '../components/Spinner';
+import BackToTop from '../components/BackToTop';
 
 const PublicJobDetail = () => {
   const { id } = useParams();
   const [jobDetail, setJobDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   const fetchJobDetail = async () => {
     try {
       setLoading(true);
@@ -17,12 +21,12 @@ const PublicJobDetail = () => {
       // Clean the ID in case it has any path segments
       const cleanId = id.split('/')[0];
       const decryptedId = decryptId(cleanId);
-      
+
       if (!decryptedId) {
         throw new Error('Invalid job ID');
       }
 
-      const response = await getJobDetail({id: decryptedId});
+      const response = await getJobDetail({ id: decryptedId });
       const data = response?.data?.data;
       setJobDetail(data);
     } catch (error) {
@@ -66,6 +70,8 @@ const PublicJobDetail = () => {
   return (
     <div className="container-xxl bg-white p-0">
       <div className="container">
+        {loading && <Spinner />}
+        <Navbar />
         {jobDetail ? (
           <JobDetailSection jobDetail={jobDetail} />
         ) : (
@@ -74,6 +80,9 @@ const PublicJobDetail = () => {
             <p>The requested job could not be found or has been removed.</p>
           </div>
         )}
+        <Footer />
+        <BackToTop />
+
       </div>
     </div>
   );

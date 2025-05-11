@@ -250,22 +250,25 @@ const AddJobs = () => {
         }
       });
 
+      if(formDataValue.get('expired_date')) {
+        formDataValue.delete('expired_date')
+      }
+      if(formDataValue.get('createdAt')) {
+        formDataValue.delete('createdAt')
+      }
+      if(formDataValue.get('updatedAt')) {
+        formDataValue.delete('updatedAt')
+      }
+      if(formDataValue.get('status')) {
+        formDataValue.delete('status')
+      }
+      if(formDataValue.get('member_id')) {
+        formDataValue.delete('member_id')
+      }
+      if(formDataValue.get('createdBy')) {
+        formDataValue.delete('createdBy')
+      }
       if (isEditMode) {
-        if(formDataValue.get('expired_date')) {
-          formDataValue.delete('expired_date')
-        }
-        if(formDataValue.get('createdAt')) {
-          formDataValue.delete('createdAt')
-        }
-        if(formDataValue.get('updatedAt')) {
-          formDataValue.delete('updatedAt')
-        }
-        if(formDataValue.get('status')) {
-          formDataValue.delete('status')
-        }
-        if(formDataValue.get('member_id')) {
-          formDataValue.delete('member_id')
-        }
         await updateJob(location.state.jobData._id, formDataValue);
       } else {
         // Add files only for new job creation

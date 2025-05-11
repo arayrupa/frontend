@@ -13,8 +13,6 @@ const JobDetail = () => {
   const [jobDetail, setJobDetail] = useState(null);
 
   useEffect(() => {
-    console.log("jobDetail aaa", jobDetail);
-    console.log("location.state?.id", location.state?.id);
     const fetchJobDetail = async () => {
       try {
         setLoading(true);
