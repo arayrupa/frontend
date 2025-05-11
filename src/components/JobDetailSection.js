@@ -3,6 +3,7 @@ import parse from 'html-react-parser';
 import moment from 'moment';
 
 const JobDetailSection = ({ jobDetail }) => {
+  console.log("jobDetail",jobDetail)
   const capitalizeFirstLetter = (string) => {
     return string?.charAt(0).toUpperCase() + string?.slice(1).toLowerCase();
   };
@@ -20,14 +21,14 @@ const JobDetailSection = ({ jobDetail }) => {
                 style={{ width: '80px', height: '80px' }}
               />
               <div className="text-start ps-4">
-                <h3 className="mb-3">{jobDetail?.title}</h3>
+                <h3 className="mb-3">{jobDetail?.title?.label}</h3>
                 <span className="text-truncate me-3">
                   <i className="fa fa-map-marker-alt text-primary me-2"></i>
                   {jobDetail?.cities?.map(city => city.label).join(', ')}
                 </span>
                 <span className="text-truncate me-3">
                   <i className="far fa-clock text-primary me-2"></i>
-                  {capitalizeFirstLetter(jobDetail?.mode_work)}
+                  {capitalizeFirstLetter(jobDetail?.mode_work?.label)}
                 </span>
                 <span className="text-truncate me-0">
                   <i className="far fa-money-bill-alt text-primary me-2"></i>
@@ -44,35 +45,9 @@ const JobDetailSection = ({ jobDetail }) => {
 
               <h4 className="mb-3">Qualifications</h4>
               <div className="job-qualification">
-                {jobDetail?.education}
+                {jobDetail?.education?.label}
               </div>
             </div>
-
-            {/* <div>
-              <h4 className="mb-4">Apply For The Job</h4>
-              <form>
-                <div className="row g-3">
-                  <div className="col-12 col-sm-6">
-                    <input type="text" className="form-control" placeholder="Your Name" />
-                  </div>
-                  <div className="col-12 col-sm-6">
-                    <input type="email" className="form-control" placeholder="Your Email" />
-                  </div>
-                  <div className="col-12 col-sm-6">
-                    <input type="text" className="form-control" placeholder="Portfolio Website" />
-                  </div>
-                  <div className="col-12 col-sm-6">
-                    <input type="file" className="form-control bg-white" />
-                  </div>
-                  <div className="col-12">
-                    <textarea className="form-control" rows="5" placeholder="Coverletter"></textarea>
-                  </div>
-                  <div className="col-12">
-                    <button className="btn btn-primary w-100" type="submit">Apply Now</button>
-                  </div>
-                </div>
-              </form>
-            </div> */}
           </div>
 
           <div className="col-lg-4">
@@ -81,7 +56,7 @@ const JobDetailSection = ({ jobDetail }) => {
               <div className="job-summary-details">
                 <p className="mb-3">
                   <i className="far fa-calendar-alt text-primary me-2"></i>
-                  <span className="fw-bold">Published On:</span>{' '}
+                  <span className="fw-bold">Date:</span>{' '}
                   {moment(jobDetail?.createdAt).format('DD MMM, YYYY [at] hh:mm A')}
                 </p>
                 <p className="mb-3">
@@ -92,7 +67,7 @@ const JobDetailSection = ({ jobDetail }) => {
                 <p className="mb-3">
                   <i className="fas fa-clock text-primary me-2"></i>
                   <span className="fw-bold">Job Nature:</span>{' '}
-                  {capitalizeFirstLetter(jobDetail?.mode_work)}
+                  {capitalizeFirstLetter(jobDetail?.mode_work?.label)}
                 </p>
                 <p className="mb-3">
                   <i className="fas fa-money-bill-alt text-primary me-2"></i>
@@ -112,7 +87,7 @@ const JobDetailSection = ({ jobDetail }) => {
                 <p className="mb-0">
                   <i className="far fa-clock text-primary me-2"></i>
                   <span className="fw-bold">Deadline:</span>{' '}
-                  {moment(jobDetail?.expired_date).format('DD MMM, YYYY [at] hh:mm A')}
+                  {moment(jobDetail?.expired_date).format('DD MMM, YYYY')}
                 </p>
               </div>
             </div>
@@ -123,25 +98,25 @@ const JobDetailSection = ({ jobDetail }) => {
                 {jobDetail?.company_name && (
                   <p className="mb-3">
                     <i className="fa fa-building text-primary me-2"></i>
-                    {jobDetail.company_name}
+                    {jobDetail?.company_name}
                   </p>
                 )}
                 {jobDetail?.company_address && (
                   <p className="mb-3">
                     <i className="fa fa-map-marker-alt text-primary me-2"></i>
-                    {jobDetail.company_address}
+                    {jobDetail?.company_address}
                   </p>
                 )}
                 {jobDetail?.company_website && (
                   <p className="mb-0">
                     <i className="fa fa-globe text-primary me-2"></i>
                     <a 
-                      href={jobDetail.company_website.startsWith('http') ? jobDetail.company_website : `https://${jobDetail.company_website}`} 
+                      href={jobDetail?.company_website} 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="text-primary"
                     >
-                      {jobDetail.company_website}
+                      {jobDetail?.company_website}
                     </a>
                   </p>
                 )}

@@ -52,7 +52,7 @@ const CategorySection = () => {
         <div className="row g-4">
           {categories.map((category, index) => (
             <div key={index} className="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay={`${0.1 + index * 0.2}s`}>
-              <a className="cat-item rounded p-4" href={`/job-list/${category.id}`}>
+              <a className="cat-item rounded p-4" href={`/job-list`}>
                 <i className={`fa fa-3x ${category.icon} text-primary mb-4`}></i>
                 <h6 className="mb-3">{category.label}</h6>
                 <p className="mb-0">{category.vacancies} Vacancy{category.vacancies !== 1 ? 'ies' : ''}</p>

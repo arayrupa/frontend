@@ -33,13 +33,13 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/404" element={<Error404 />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/public/job/:id" element={<PublicJobDetail />} />
         
         {/* Protected Admin Routes */}
         <Route path="/dashboard" element={<PrivateRoute element={<AdminDashboard />} />} />
         <Route path="/jobs" element={<PrivateRoute element={<AdminJobs />} />} />
         <Route path="/jobs-add" element={<PrivateRoute element={<AddJobs />} />} />
-        <Route path="/admin/jobs/edit" element={<PrivateRoute element={<AddJobs />} />} />
-        <Route path="/public-job/:id" element={<PublicJobDetail />} />
+        <Route path="/jobs-edit" element={<PrivateRoute element={<AddJobs />} />} />
       </Routes>
     </Router>
   );

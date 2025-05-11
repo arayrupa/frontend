@@ -87,7 +87,7 @@ const getColumns = (navigate, handleView, handleDelete, handleStatusChange, filt
       return (
         <Box display="flex" gap={1} justifyContent="flex-end">
           <IconButton 
-            onClick={() => navigate('/admin/jobs/edit', {
+            onClick={() => navigate('/jobs-edit', {
               state: { 
                 companies: filterData?.companies,
                 jobRoles: filterData?.jobRoles,
@@ -478,7 +478,7 @@ const JobsList = () => {
                   variant="contained"
                   onClick={() => {
                     handleCloseModal();
-                    navigate('/admin/jobs/edit', {
+                    navigate('/jobs-edit', {
                       state: { 
                         companies: filterData?.companies,
                         jobRoles: filterData?.jobRoles,

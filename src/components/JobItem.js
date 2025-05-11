@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CopyAll as CopyIcon } from '@mui/icons-material';
+import { encryptId } from '../utils/encryption';
 
 const JobItem = ({ job }) => {
   const navigate = useNavigate();
@@ -11,8 +12,9 @@ const JobItem = ({ job }) => {
   };
 
   const getPublicUrl = (jobId) => {
-    // Generate public URL using job ID
-    return `${window.location.origin}/public-job/${jobId}`;
+    // Generate encrypted URL
+    const encryptedId = encryptId(jobId);
+    return `${window.location.origin}/public/job/${encryptedId}`;
   };
 
   const handleCopy = async () => {
