@@ -26,7 +26,7 @@ const BackToTop = () => {
 
   return (
     <a 
-      href="#" 
+      // href="#" 
       className={`btn btn-lg btn-primary btn-lg-square back-to-top ${isVisible ? 'd-inline' : 'd-none'}`} 
       onClick={scrollToTop}
     >

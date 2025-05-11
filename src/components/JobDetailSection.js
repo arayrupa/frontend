@@ -3,7 +3,6 @@ import parse from 'html-react-parser';
 import moment from 'moment';
 
 const JobDetailSection = ({ jobDetail }) => {
-  console.log("jobDetail",jobDetail)
   const capitalizeFirstLetter = (string) => {
     return string?.charAt(0).toUpperCase() + string?.slice(1).toLowerCase();
   };
