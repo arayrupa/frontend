@@ -72,6 +72,24 @@ export const masterFilters = async (query) => {
   }
 };
 
+export const skillDropdown = async (search) => {
+  try {
+    const response = await apiClient.post('/skill-dropdown', {search});
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const citiesDropDown = async (search) => {
+  try {
+    const response = await apiClient.post('/cities-dropdown', {search});
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getJobCategoryFilters = async () => {
   try {
     const response = await apiClient.get('/category_filters');

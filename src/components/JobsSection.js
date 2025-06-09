@@ -13,7 +13,7 @@ const tabStyle = {
 };
 
 const JobsSection = () => {
-    const location = useLocation();
+  const location = useLocation();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('tab-all');
@@ -21,9 +21,10 @@ const JobsSection = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [modeWork, setModeWork] = useState('');
   const [industry, setIndustry] = useState(location.state?.industry || '');
+  const [searchData, setSearchData] = useState(location.state?.searchData || {});
   const jobsPerPage = 10;
-  
-  const fetchJobs = async (pageNumber = 1, modeWork, industryFilter = '') => {
+
+  const fetchJobs = async (pageNumber = 1, modeWork, industryFilter = '', searchData = {}) => {
     try {
       setLoading(true);
       const response = await getJobs({ 
@@ -32,9 +33,13 @@ const JobsSection = () => {
         type: false,
         industry: industryFilter || industry || '',
         limit: jobsPerPage,
+        search: searchData?.jobTitle==undefined || searchData?.jobTitle==null ? '' : searchData?.jobTitle,
+        skills: searchData?.skills==undefined || searchData?.skills==null ? [] : searchData?.skills,
+        cities: searchData?.cities==undefined || searchData?.cities==null ? [] : searchData?.cities,
       });
-      setJobs(response?.data?.jobList?.jobList || []);
-      setTotalPages(response?.data?.pagination?.totalPages);
+      setJobs(response?.data?.jobList?.jobList || [])
+      setTotalPages(response?.data?.pagination?.totalPages)
+
     } catch (error) {
       console.error('Failed to fetch jobs:', error);
     } finally {
@@ -43,14 +48,16 @@ const JobsSection = () => {
   };
 
   useEffect(() => {
-    fetchJobs(page, modeWork, industry);
-  }, [page, modeWork, industry]);
+    fetchJobs(page, modeWork, industry, searchData);
+  }, [page, modeWork, industry])
+
 
   const handlePageChange = (event, value) => {
     setPage(value)
   };
 
   const handleTabChange = (mode) => { 
+    setSearchData({})
     setIndustry('')
     setModeWork(mode)
     setPage(1)

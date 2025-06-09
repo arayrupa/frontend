@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -11,20 +11,23 @@ import {
   IconButton,
   FormControl,
   InputLabel,
-  Select,
   MenuItem,
   styled,
   ThemeProvider,
   createTheme,
   TextField,
   InputAdornment,
-  FormHelperText
+  Select,
+  FormHelperText,
+  Autocomplete
 } from '@mui/material';
+
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { createJob, updateJob } from '../../api';
+import { createJob, updateJob, skillDropdown, citiesDropDown } from '../../api/jobs';
 import CloseIcon from '@mui/icons-material/Close';
+import debounce from 'lodash/debounce';
 
 
 const theme = createTheme({
@@ -134,7 +137,7 @@ const AddJobs = () => {
   const [industries, setIndustries] = useState(location.state?.industries || []);
   const [funcCategories, setFuncCategories] = useState(location.state?.funcCategories || []);
   const [cities, setCities] = useState(location.state?.cities || []);
-  const [skills, setSkills] = useState(location.state?.skills || []);
+  const [skills, setSkills] = useState([]);
   const [modeWork, setModeWork] = useState(location.state?.modeWork || []);
   const [files, setFiles] = useState({
     resume: null,
@@ -143,7 +146,38 @@ const AddJobs = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const debouncedFetchSkills = useCallback(
+    debounce(async (input = '') => {
+      try {
+        const res = await skillDropdown(input);
+        const fetchedSkills = Array.isArray(res?.data?.skills) ? res.data.skills : [];
+        setSkills(fetchedSkills);
+      } catch (error) {
+        console.error('Skill fetch failed:', error);
+        setSkills([]);
+      }
+    }, 300),
+    []
+  );
+
+  const debouncedFetchCities = useCallback(
+    debounce(async (input = '') => {
+      try {
+        const res = await citiesDropDown(input);
+        const fetchedCities = Array.isArray(res?.data?.cities) ? res.data.cities : [];
+        setCities(fetchedCities);
+      } catch (error) {
+        console.error('City fetch failed:', error);
+        setCities([]);
+      }
+    }, 300),
+    []
+  );
+
+
   useEffect(() => {
+    debouncedFetchSkills('')
+    debouncedFetchCities('')
     if (location.state?.jobData) {
       // Transform the job data to match form structure
       const jobData = location.state.jobData;
@@ -180,8 +214,7 @@ const AddJobs = () => {
       setEducations(location.state.educations || []);
       setIndustries(location.state.industries || []);
       setFuncCategories(location.state.funcCategories || []);
-      setCities(location.state.cities || []);
-      setSkills(location.state.skills || []);
+      setCities(location.state.cities || [])
       setModeWork(location.state.modeWork || []);
     }
   }, [location.state]);
@@ -716,7 +749,27 @@ const AddJobs = () => {
                   <Grid item xs={12} sm={6}>
                     <FormControl fullWidth>
                       <InputLabel>City</InputLabel>
-                      <Select
+                      <Autocomplete
+                        options={cities}
+                        getOptionLabel={(option) => option.label}
+                        value={formData.cities || null}
+                        onChange={(event, newValue) => {
+                          setFormData(prev => ({
+                            ...prev,
+                            cities: newValue
+                          }));
+                        }}
+                        onInputChange={(event, inputValue) => {
+                          if (inputValue) {
+                            debouncedFetchCities(inputValue);
+                          }
+                        }}
+                        renderInput={(params) => (
+                          <TextField {...params} label="" variant="outlined" required />
+                        )}
+                        isOptionEqualToValue={(option, value) => option.value === value.value}
+                      />
+                      {/* <Select
                         name="cities"
                         value={cities?.find(c => c.value === formData.cities?.value)}
                         onChange={handleChange}
@@ -728,25 +781,32 @@ const AddJobs = () => {
                             {city.label}
                           </MenuItem>
                         ))}
-                      </Select>
+                      </Select> */}
                     </FormControl>
                   </Grid>
                   <Grid item xs={12}>
                     <FormControl fullWidth>
                       <InputLabel>Skills</InputLabel>
-                      <Select
-                        name="skill"
-                        value={skills?.find(s => s.value === formData.skill?.value)}
-                        onChange={handleChange}
-                        label="Skills"
-                        required
-                      >
-                        {skills?.map((skill, index) => (
-                          <MenuItem key={index} value={skill}>
-                            {skill.label}
-                          </MenuItem>
-                        ))}
-                      </Select>
+                      <Autocomplete
+                        options={skills}
+                        getOptionLabel={(option) => option.label}
+                        value={formData.skill || null}
+                        onChange={(event, newValue) => {
+                          setFormData(prev => ({
+                            ...prev,
+                            skill: newValue
+                          }));
+                        }}
+                        onInputChange={(event, inputValue) => {
+                          if (inputValue) {
+                            debouncedFetchSkills(inputValue);
+                          }
+                        }}
+                        renderInput={(params) => (
+                          <TextField {...params} label="" variant="outlined" required />
+                        )}
+                        isOptionEqualToValue={(option, value) => option.value === value.value}
+                      />
                     </FormControl>
                   </Grid>
                 </Grid>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef  } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Box, Button, IconButton, Typography, Paper, Modal, Divider, Grid, Switch, Snackbar, Alert } from '@mui/material';
 import { Delete, Edit, Visibility, Close as CloseIcon } from '@mui/icons-material';
@@ -128,6 +128,7 @@ const getColumns = (navigate, handleView, handleDelete, handleStatusChange, filt
 ];
 
 const JobsList = () => {
+  const hasFetched = useRef(false);
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterData, setFilterData] = useState({
@@ -137,7 +138,6 @@ const JobsList = () => {
     industries: [],
     funcCategories: [],
     cities: [],
-    skills: [],
     modeWork: []
   });
   const [openModal, setOpenModal] = useState(false);
@@ -165,61 +165,63 @@ const JobsList = () => {
     });
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const [jobsData, filters] = await Promise.all([
-          getJobs({type: true}),
-          masterFilters()
-        ]);
-        
-        setJobs(jobsData.data.jobList.jobList);
-        setFilterData({
-          companies: filters.data.companies.companyList.map(item => ({
-            value: item.id || item.value,
-            label: item.name || item.label
-          })) || [],
-          jobRoles: filters.data.job_roles.job_RoleList.map(item => ({
-            value: item.id || item.value,
-            label: item.name || item.label
-          })) || [],
-          educations: filters.data.educations.educationList.map(item => ({
-            value: item.id || item.value,
-            label: item.name || item.label
-          })) || [],
-          industries: filters.data.industries.industryList.map(item => ({
-            value: item.id || item.value,
-            label: item.name || item.label
-          })) || [],
-          funcCategories: filters.data.func_categories.functionsList.map(item => ({
-            value: item.id || item.value,
-            label: item.name || item.label
-          })) || [],
-          cities: filters.data.cities.citiesList.map(item => ({
-            value: item.id || item.value,
-            label: item.name || item.label
-          })) || [],
-          skills: filters.data.skills.skillsList.map(item => ({
-            value: item.id || item.value,
-            label: item.name || item.label
-          })) || [],
-          modeWork: filters.data.work_mode.workModeList.map(item => ({
-            value: item.id || item.value,
-            label: item.name || item.label
-          })) || []
-        });
-        showToast('Jobs loaded successfully');
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        showToast('Failed to load jobs', 'error');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const [jobsData, filters] = await Promise.all([
+        getJobs({type: true}),
+        masterFilters()
+      ])
+      setJobs(jobsData.data.jobList.jobList);
+      setFilterData({
+        companies: filters.data.companies.companyList.map(item => ({
+          value: item.id || item.value,
+          label: item.name || item.label
+        })) || [],
+        jobRoles: filters.data.job_roles.job_RoleList.map(item => ({
+          value: item.id || item.value,
+          label: item.name || item.label
+        })) || [],
+        educations: filters.data.educations.educationList.map(item => ({
+          value: item.id || item.value,
+          label: item.name || item.label
+        })) || [],
+        industries: filters.data.industries.industryList.map(item => ({
+          value: item.id || item.value,
+          label: item.name || item.label
+        })) || [],
+        funcCategories: filters.data.func_categories.functionsList.map(item => ({
+          value: item.id || item.value,
+          label: item.name || item.label
+        })) || [],
+        cities: filters.data.cities.citiesList.map(item => ({
+          value: item.id || item.value,
+          label: item.name || item.label
+        })) || [],
+        modeWork: filters.data.work_mode.workModeList.map(item => ({
+          value: item.id || item.value,
+          label: item.name || item.label
+        })) || []
+      });
+      showToast('Jobs loaded successfully');
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      showToast('Failed to load jobs', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+    fetchData();
+  }, [])
+
 
   const handleView = (id) => {
     const job = jobs.find(job => job._id === id);
@@ -291,7 +293,6 @@ const JobsList = () => {
               industries: filterData.industries,
               funcCategories: filterData.funcCategories,
               cities: filterData.cities,
-              skills: filterData.skills,
               modeWork: filterData.modeWork,
               jobData: null
             }
@@ -425,7 +426,7 @@ const JobsList = () => {
                     Requirements
                   </Typography>
                   <Typography variant="body1" gutterBottom>
-                    <strong>Education:</strong> {selectedJob.edu_id?.label}
+                    <strong>Education:</strong> {selectedJob.education?.label}
                   </Typography>
                   <Typography variant="body1" gutterBottom>
                     <strong>Notice Period:</strong> {selectedJob.notice_period} days
