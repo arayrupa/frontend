@@ -29,7 +29,7 @@ const ContactSection = () => {
                   >
                     <i className="fa fa-envelope-open text-primary"></i>
                   </div>
-                  <span>info@example.com</span>
+                  <span>info@ramasistech.com</span>
                 </div>
               </div>
               <div className="col-md-4 wow fadeIn" data-wow-delay="0.5s">

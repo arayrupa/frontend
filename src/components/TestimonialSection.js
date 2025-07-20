@@ -3,22 +3,22 @@ import React, { useEffect } from 'react';
 const TestimonialSection = () => {
   const testimonials = [
     {
-      content: "Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam",
+      content: "SkillArion helped me land my dream job within just two weeks! The platform is easy to navigate and offers high-quality listings from trusted companies",
       image: "/img/testimonial-1.jpg",
-      name: "Client Name",
-      profession: "Profession"
+      name: "Priya Sharma",
+      profession: "Software Developer at TechNova"
     },
     {
-      content: "Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam",
+      content: "We’ve hired three exceptional candidates using SkillArion. It has saved us time and simplified our hiring process significantly",
       image: "/img/testimonial-2.jpg",
-      name: "Client Name",
-      profession: "Profession"
+      name: "Rajeev Mehta",
+      profession: "HR Manager at BrightFuture Solutions"
     },
     {
-      content: "Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam",
+      content: "What I love about SkillArion is the personalized job alerts. I never miss out on opportunities that match my profile",
       image: "/img/testimonial-3.jpg",
-      name: "Client Name",
-      profession: "Profession"
+      name: "Rohit Das",
+      profession: "Marketing Executive"
     }
   ];
 

@@ -34,12 +34,41 @@ const AboutSection = () => {
               </div>
             </div>
             <div className="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
-              <h1 className="mb-4">We Help To Get The Best Job And Find A Talent</h1>
-              <p className="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit...</p>
-              <p><i className="fa fa-check text-primary me-3"></i>Tempor erat elitr rebum at clita</p>
-              <p><i className="fa fa-check text-primary me-3"></i>Aliqu diam amet diam et eos</p>
-              <p><i className="fa fa-check text-primary me-3"></i>Clita duo justo magna dolore erat amet</p>
-              <a className="btn btn-primary py-3 px-5 mt-3" href="#">Read More</a>
+              <h2 className="mb-4">We Help To Get The Best Job And Find A Talent</h2>
+              <p className="mb-4">Welcome to Skillarion your partner in career growth and professional development.</p>
+              <p><i className="fa fa-check text-primary me-3"></i>A dynamic platform dedicated to bridging gap between opportunity and talent.
+            </p>
+              <p><i className="fa fa-check text-primary me-3"></i>Whether you're seeking your next big role, striving to upgrade your skill set</p>
+              <p><i className="fa fa-check text-primary me-3"></i>we provide the tools and resources to help you move forward with confidence.</p>
+            </div>
+              <div className="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+              <h2 className="mb-4">Why Choose SkillArion?</h2>
+              <p>
+                <i className="fa fa-check text-primary me-3"></i>Trusted by growing professionals.
+            </p>
+            <p>
+                <i className="fa fa-check text-primary me-3"></i>Real-time updates with new opportunities.
+            </p>
+            <p>
+                <i className="fa fa-check text-primary me-3"></i>Secure and data-driven platform.
+            </p>
+            <p>
+                <i className="fa fa-check text-primary me-3"></i>Committed support & continuous innovation.
+            </p>
+            </div>
+            <div className="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+              <h2 className="mb-4">"Our Mission"</h2>
+              <p><i className="fa fa-check text-primary me-3"></i>To empower individuals by connecting them with the right job opportunities and offering relevant skill-enhancement resources that foster long-term success.
+            </p>
+            </div>
+             <div className="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+              <h2 className="mb-4">Join Us</h2>
+              <p><i className="fa fa-check text-primary me-3"></i>Whether you're starting your career, seeking your next big challenge,
+            </p>
+            <p><i className="fa fa-check text-primary me-3"></i>SkillArion is here to support you every step of way.
+            </p>
+            <p><i className="fa fa-check text-primary me-3"></i>Join our community and take the next step toward your professional goals.
+            </p>
             </div>
           </div>
         </div>
